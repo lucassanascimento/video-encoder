@@ -1,4 +1,4 @@
-FROM golang:1.20.1-alpine
+FROM golang:1.14-alpine3.11
 ENV PATH="$PATH:/bin/bash" \
     BENTO4_BIN="/opt/bento4/bin" \
     PATH="$PATH:/opt/bento4/bin"
