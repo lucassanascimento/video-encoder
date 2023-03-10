@@ -14,7 +14,7 @@ func init() {
 type Job struct {
 	ID               string    `json:"job_id" valid:"uuid" gorm:"type:uuid;primary_key"`
 	OutputBucketPath string    `json:"out_put_bucket_path" valid:"notnull"`
-	Status           string    `json:"satus" valid:"notnull"`
+	Status           string    `json:"status" valid:"notnull"`
 	Video            *Video    `json:"video" valid:"-"`
 	VideoID          string    `json:"_" valid:"-"  gorm:"type:uuid;column:video_id;notnull;foreignKey:videos (id);constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Error            string    `json:"error" valid:"-"`
