@@ -1,10 +1,13 @@
 package database
 
 import (
+	"encoder/domain"
 	"log"
 
 	"gorm.io/driver/sqlite"
 
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -29,7 +32,7 @@ func NewDbTest() *gorm.DB {
 	dbInstance := NewDb()
 	dbInstance.Env = "Test"
 	dbInstance.DbTypeTest = "sqlite3"
-	dbInstance.DsnTest = ":memory"
+	dbInstance.DsnTest = ":memory:"
 	dbInstance.AutoMigrateBb = true
 	dbInstance.Debug = true
 
@@ -47,7 +50,20 @@ func (d *Database) Connect() (*gorm.DB, error) {
 	if d.Env != "Test" {
 		d.Db, err = gorm.Open(postgres.Open(d.Dsn), &gorm.Config{})
 	} else {
-		d.Db, err = gorm.Open(sqlite.Open("gorm.db"), &gorm.Config{})
+		d.Db, err = gorm.Open(sqlite.Open(d.DsnTest), &gorm.Config{})
 	}
-	return nil, err
+
+	if err != nil {
+		return nil, err
+	}
+
+	if d.Debug {
+		d.Db.Logger.LogMode(1)
+	}
+
+	if d.AutoMigrateBb {
+		d.Db.AutoMigrate(&domain.Video{}, &domain.Job{})
+	}
+
+	return d.Db, err
 }
